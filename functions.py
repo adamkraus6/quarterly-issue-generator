@@ -10,8 +10,8 @@ import tkFileDialog
 import zipfile
 import os
 import collections
-import datetime
-import math
+from docx import Document
+from datetime import date
 
 
 def readcsv():
@@ -37,3 +37,36 @@ def readcsv():
 					entry = Log(row['date'], row['time'], row['psa'])
 					logs.append(entry)
 	return logs
+
+def generatedocx(logs, quarter):
+	# This function will generate the .docx file for the report, given the list
+	# of logs in the form of the named tuple.
+	
+	#create the document
+	report = Document()
+
+	logs.sort(key=lambda tup: tup[2])
+
+	#Generate the title
+	report.add_heading('KTEQ-FM Quarterly Issues Report Q' + str(quarter) + ' '+ str(date.today().year), level=0)
+
+	report.add_paragraph('This document is the quarterly Community Issues Report for KTEQ-FM. It details a number of community issues discussed during programming throughout the quarter, and lists public service announcements that support these issues.')
+
+	table = report.add_table(rows=1, cols=3)
+	hdr = table.rows[0].cells
+	hdr[0].text = 'Date Played'
+	hdr[1].text = 'Time Played'
+	hdr[2].text = 'PSA Title'
+
+	for entry in logs:
+		row = table.add_row().cells
+		row[0].text = str(entry.date)
+		row[1].text = str(entry.time)
+		row[2].text = entry.psa
+
+	reportdir = 'reports/' + str(date.today().year)
+	if not os.path.exists(reportdir):
+		os.makedirs(reportdir)
+
+	outputfile = reportdir + '/Q' + str(quarter) + '_Issues.docx'
+	report.save(outputfile)
