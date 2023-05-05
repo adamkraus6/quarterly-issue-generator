@@ -1,2 +1,5 @@
 .DS_Store
 *.pyc
+*.docx
+*.csv
+/logs/extracted

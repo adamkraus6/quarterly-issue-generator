@@ -5,8 +5,8 @@
 # =============================================================================
 
 import csv
-import Tkinter as tk
-import tkFileDialog
+import tkinter as tk
+import tkinter.filedialog
 import zipfile
 import os
 import collections
@@ -21,7 +21,7 @@ def readcsv():
 	root = tk.Tk()
 	root.withdraw()
 
-	file_path = tkFileDialog.askopenfilename()
+	file_path = tkinter.filedialog.askopenfilename()
 	zip_ref = zipfile.ZipFile(file_path, 'r')
 	zip_ref.extractall('logs/extracted/')
 	zip_ref.close()
@@ -51,7 +51,7 @@ def generatedocx(logs, quarter):
 	for log in logs:
 		if log.psa not in testlogs:
 			testlogs[log.psa] = {}
-                if log.date not in testlogs[log.psa]:
+		if log.date not in testlogs[log.psa]:
 			testlogs[log.psa][log.date] = []
 		testlogs[log.psa][log.date].append(log.time)
 
